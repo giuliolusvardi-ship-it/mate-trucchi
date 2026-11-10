@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mate Trucchi">
+<meta name="theme-color" content="#FFF7E6">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<title>Mate Trucchi</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#FFF7E6;color:#2b2d42;
+ font-family:"Avenir Next","SF Pro Rounded",-apple-system,"Helvetica Neue",Arial,sans-serif;
+ -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
+button{font:inherit;color:inherit;border:0;cursor:pointer;touch-action:manipulation}
+#app{position:fixed;top:0;left:0;right:0;bottom:0;
+ padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+ overflow:hidden}
+.scroll{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:22px 26px 40px}
+
+/* HOME */
+.home h1{font-size:44px;margin:6px 0 0;letter-spacing:-1px}
+.home .sub{font-size:20px;margin:4px 0 22px;color:#6b6f8a}
+.tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;max-width:900px}
+.tcard{position:relative;background:#fff;border-radius:28px;padding:22px 24px;text-align:left;
+ box-shadow:0 6px 0 var(--c),0 10px 24px rgba(0,0,0,.08);border:3px solid var(--c);min-height:150px;overflow:hidden}
+.tcard:active{transform:translateY(4px);box-shadow:0 2px 0 var(--c)}
+.tcard .em{font-size:44px}
+.tcard .sym{position:absolute;right:18px;top:0;font-size:120px;font-weight:900;color:var(--c);opacity:.18;line-height:1}
+.tcard h2{margin:6px 0 2px;font-size:28px;color:var(--c);filter:brightness(.8)}
+.tcard p{margin:0;font-size:17px;color:#6b6f8a}
+.mix{display:block;margin:22px 0 10px;background:#2b2d42;color:#fff;border-radius:22px;padding:18px 28px;font-size:22px;font-weight:700;max-width:900px;width:100%}
+.mix.off{opacity:.35}
+.info{background:none;color:#6b6f8a;font-size:16px;padding:10px 0;text-decoration:underline}
+
+/* TOP BAR */
+.bar{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.back{background:#fff;border-radius:16px;padding:10px 18px;font-size:18px;font-weight:700;box-shadow:0 3px 0 #e2d9c3}
+.bar h1{margin:0;font-size:30px;flex:1}
+
+/* LEVEL LIST */
+.lv{display:flex;align-items:center;gap:16px;width:100%;max-width:820px;background:#fff;border-radius:22px;padding:16px 20px;margin-bottom:12px;
+ text-align:left;box-shadow:0 4px 0 #e8e0cc}
+.lv:active{transform:translateY(3px)}
+.lv .n{width:52px;height:52px;border-radius:50%;background:var(--c);color:#fff;font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.lv .t{flex:1;font-size:22px;font-weight:700}
+.lv .t small{display:block;font-size:15px;font-weight:500;color:#6b6f8a;margin-top:2px}
+.lv .s{font-size:26px;color:#f5b301;letter-spacing:2px}
+.lv.lock{opacity:.45;box-shadow:none}
+.lv.lock .n{background:#b9b6aa}
+
+/* LESSON */
+.card{background:#fff;border-radius:28px;padding:26px 30px;max-width:820px;box-shadow:0 6px 0 #e8e0cc}
+.card h2{margin:0 0 8px;font-size:32px;color:var(--c);filter:brightness(.8)}
+.card p.tip{font-size:22px;line-height:1.4;margin:6px 0 16px}
+.ex{background:#FFF7E6;border-radius:20px;padding:16px 20px;border:3px dashed var(--c)}
+.ex .q{font-size:34px;font-weight:800;margin-bottom:6px}
+.ex ol{margin:0;padding-left:28px;font-size:21px;line-height:1.55}
+.big{display:inline-block;margin-top:22px;background:var(--c);color:#fff;font-size:26px;font-weight:800;border-radius:22px;padding:16px 34px;box-shadow:0 5px 0 rgba(0,0,0,.2)}
+.big:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.2)}
+
+/* QUIZ */
+#quiz{height:100%;display:flex;flex-direction:column;padding:12px 16px 14px}
+.qbar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.qbar .back{padding:8px 14px;font-size:16px}
+.qbar .ttl{font-size:19px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dots{display:flex;gap:7px}
+.dots i{width:16px;height:16px;border-radius:50%;background:#e6dfcc;display:block}
+.dots i.d{background:var(--c)} .dots i.c{outline:3px solid var(--c);outline-offset:2px}
+.main{flex:1;min-height:0;display:flex;gap:14px}
+.left{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.prob{background:#fff;border-radius:22px;padding:10px 22px;display:flex;align-items:center;gap:12px;font-size:46px;font-weight:800;
+ box-shadow:0 4px 0 #e8e0cc;white-space:nowrap;flex-wrap:wrap}
+.prob small{font-size:18px;font-weight:600;color:#6b6f8a}
+.box{display:inline-flex;align-items:center;justify-content:center;min-width:110px;height:64px;padding:0 12px;border-radius:16px;
+ background:#fff;border:4px solid #cfc8b4;font-size:44px;color:#2b2d42}
+.box.sel{border-color:var(--c);background:#fffdf4;box-shadow:0 0 0 4px rgba(0,0,0,.05)}
+.box.sel:empty::after{content:"";width:3px;height:40px;background:var(--c);animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+.paperwrap{flex:1;min-height:0;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 4px 0 #e8e0cc;border:3px solid #fff}
+#paper{position:absolute;inset:0;background-color:#fffef8;
+ background-image:linear-gradient(#cfe3f5 1.5px,transparent 1.5px),linear-gradient(90deg,#cfe3f5 1.5px,transparent 1.5px);background-size:30px 30px}
+#paper:before{content:"Scrivi qui i tuoi calcoli e i tuoi passaggi ✏️";position:absolute;left:16px;top:10px;color:#b9c7d6;font-size:18px;font-weight:600}
+#cv{position:absolute;left:0;top:0;touch-action:none}
+.tools{display:flex;gap:10px;align-items:center}
+.tool{width:60px;height:52px;border-radius:16px;background:#fff;box-shadow:0 3px 0 #e2d9c3;font-size:24px;display:flex;align-items:center;justify-content:center}
+.tool.on{outline:4px solid #2b2d42}
+.tool .dot{width:26px;height:26px;border-radius:50%}
+.sp{flex:1}
+.right{width:300px;flex:none;display:flex;flex-direction:column;gap:10px}
+.hintbtn{background:#FFE08A;border-radius:18px;padding:12px;font-size:20px;font-weight:700;box-shadow:0 4px 0 #e0bb4a}
+.hintbox{background:#FFF1C2;border-radius:18px;padding:12px 14px;font-size:19px;line-height:1.35}
+.keys{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:10px}
+.k{background:#fff;border-radius:20px;font-size:38px;font-weight:800;box-shadow:0 4px 0 #e2d9c3}
+.k:active{transform:translateY(3px);box-shadow:0 1px 0 #e2d9c3}
+.k.del{background:#ffe3e3;box-shadow:0 4px 0 #efc2c2}
+.go{background:var(--c);color:#fff;border-radius:22px;padding:16px;font-size:28px;font-weight:800;box-shadow:0 5px 0 rgba(0,0,0,.22)}
+.go:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.22)}
+.shake{animation:sh .35s}
+@keyframes sh{20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+#toast{position:fixed;left:50%;top:84px;transform:translateX(-50%);background:#2b2d42;color:#fff;border-radius:18px;padding:14px 24px;font-size:22px;font-weight:700;z-index:30;display:none;max-width:80%;text-align:center}
+@media (orientation:portrait){
+ .main{flex-direction:column}
+ .right{width:100%;flex-direction:column}
+ .keys{grid-template-columns:repeat(5,1fr);grid-auto-rows:64px;flex:none}
+ .prob{font-size:38px}
+}
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(43,45,66,.55);z-index:20;display:flex;align-items:center;justify-content:center;padding:24px}
+.sheet{background:#fff;border-radius:30px;padding:26px 30px;max-width:720px;width:100%;max-height:92%;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:pop .25s}
+@keyframes pop{from{transform:scale(.9);opacity:0}}
+.sheet h2{margin:0 0 4px;font-size:36px}
+.sheet .res{font-size:26px;font-weight:800;margin:8px 0 12px}
+.sheet h3{margin:12px 0 6px;font-size:21px;color:#6b6f8a}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;background:#FFF7E6;border-radius:16px;padding:10px 14px 10px 54px;margin-bottom:8px;font-size:21px;line-height:1.35;position:relative;
+ opacity:0;animation:in .4s forwards}
+.steps li:before{content:counter(s);position:absolute;left:12px;top:9px;width:30px;height:30px;border-radius:50%;background:var(--c);color:#fff;font-weight:800;text-align:center;line-height:30px;font-size:18px}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.stars{font-size:70px;color:#f5b301;letter-spacing:6px;text-align:center}
+.center{text-align:center}
+.row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.sec{background:#fff;color:#2b2d42;box-shadow:0 5px 0 #e2d9c3}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+
+<script>
+/*LOGIC*/
+var R=function(a,b){return a+Math.floor(Math.random()*(b-a+1));};
+var pick=function(a){return a[Math.floor(Math.random()*a.length)];};
+var ceil10=function(n){return Math.ceil(n/10)*10;};
+function P(text,ans,steps,hint,labels){return {text:text,ans:ans,steps:steps,hint:hint,labels:labels||null};}
+
+/* ---------- ADDIZIONI ---------- */
+function gA1(){var a,b;do{a=R(6,9);b=R(3,9);}while(a+b<=10);
+ var n=10-a,r=b-n,s=a+b;
+ return P(`${a} + ${b}`,[s],[
+  `Per arrivare a 10 da ${a} mi mancano ${n}: spezzo il ${b} in ${n} + ${r}`,
+  `${a} + ${n} = 10`,
+  `10 + ${r} = ${s}`],`Spezza il ${b} per arrivare prima a 10.`);}
+function gA2(){var u=R(3,9),a=10*R(1,8)+u,b=R(Math.max(2,11-u),9),n=10-u,t=a+n,r=b-n,s=a+b;
+ return P(`${a} + ${b}`,[s],[
+  `Da ${a} per arrivare alla decina (${t}) mancano ${n}: spezzo il ${b} in ${n} + ${r}`,
+  `${a} + ${n} = ${t}`,
+  `${t} + ${r} = ${s}`],`Arriva alla decina tonda, poi aggiungi quello che avanza.`);}
+function gA3(){var a,b,ua,ub;do{a=R(12,58);b=R(12,58);ua=a%10;ub=b%10;}while(!ua||!ub);
+ var ta=a-ua,tb=b-ub,s=a+b;
+ return P(`${a} + ${b}`,[s],[
+  `Scompongo: ${a} = ${ta} + ${ua} e ${b} = ${tb} + ${ub}`,
+  `Prima le decine: ${ta} + ${tb} = ${ta+tb}`,
+  `Poi le unità: ${ua} + ${ub} = ${ua+ub}`,
+  `Riunisco: ${ta+tb} + ${ua+ub} = ${s}`],`Somma insieme le decine e insieme le unità.`);}
+function gA4(){var d=pick([1,2]),a=10*R(2,8)-d,b=R(14,57),r=a+d,s=a+b;
+ return P(`${a} + ${b}`,[s],[
+  `${a} è quasi ${r} (ne mancano ${d})`,
+  `${r} + ${b} = ${r+b}`,
+  `Ho aggiunto ${d} in più, quindi lo tolgo: ${r+b} − ${d} = ${s}`],`${a} è vicino a una decina tonda: usa quella e poi correggi.`);}
+function gA5(){var a=R(120,560),b=R(120,380),ra=a%100,rb=b%100,ha=a-ra,hb=b-rb,s=a+b;
+ return P(`${a} + ${b}`,[s],[
+  `Scompongo in centinaia e resto: ${a} = ${ha} + ${ra} e ${b} = ${hb} + ${rb}`,
+  `Centinaia: ${ha} + ${hb} = ${ha+hb}`,
+  `Resto: ${ra} + ${rb} = ${ra+rb}`,
+  `Riunisco: ${ha+hb} + ${ra+rb} = ${s}`],`Prima le centinaia, poi il resto.`);}
+
+/* ---------- SOTTRAZIONI ---------- */
+function gS1(){var a=R(11,18),u=a-10,b=R(u+1,9),r=b-u,s=a-b;
+ return P(`${a} − ${b}`,[s],[
+  `Spezzo il ${b} in ${u} + ${r}: prima tolgo ${u} per arrivare a 10`,
+  `${a} − ${u} = 10`,
+  `Ora tolgo il resto: 10 − ${r} = ${s}`],`Togli prima quanto basta per arrivare a 10.`);}
+function gS2(){var b=10*R(2,8)+R(5,9),gap=R(6,14),a=b+gap,c=ceil10(b);
+ return P(`${a} − ${b}`,[gap],[
+  `I numeri sono vicini: non tolgo, conto in avanti da ${b} fino a ${a}`,
+  `Da ${b} a ${c}: +${c-b}`,
+  `Da ${c} a ${a}: +${a-c}`,
+  `Totale dei salti: ${c-b} + ${a-c} = ${gap}`],`Quanto manca per andare da ${b} a ${a}?`);}
+function gS3(){var d=pick([1,2]),b=10*R(2,7)-d,a=R(b+8,99),r=b+d,s=a-b;
+ return P(`${a} − ${b}`,[s],[
+  `${b} è quasi ${r} (ne mancano ${d})`,
+  `${a} − ${r} = ${a-r}`,
+  `Ho tolto ${d} in più, quindi lo rimetto: ${a-r} + ${d} = ${s}`],`Togli la decina tonda vicina, poi rimetti il pezzetto.`);}
+function gS4(){var a,ua,ub,tb,b;do{a=R(55,99);ua=a%10;}while(!ua);
+ ub=R(1,ua);tb=10*R(1,Math.floor(a/10)-1);b=tb+ub;
+ return P(`${a} − ${b}`,[a-b],[
+  `Scompongo ${b} = ${tb} + ${ub}`,
+  `Tolgo prima le decine: ${a} − ${tb} = ${a-tb}`,
+  `Poi tolgo le unità: ${a-tb} − ${ub} = ${a-b}`],`Togli prima le decine, poi le unità.`);}
+function gS5(){var base=pick([100,200,300]),n=R(11,89);if(n%10===0)n+=3;var c=ceil10(n),s=base-n;
+ return P(`${base} − ${n}`,[s],[
+  `Conto in avanti da ${n} fino a ${base}`,
+  `Da ${n} alla decina ${c}: +${c-n}`,
+  `Da ${c} a ${base}: +${base-c}`,
+  `Totale dei salti: ${c-n} + ${base-c} = ${s}`],`Parti da ${n} e salta fino a ${base}.`);}
+
+/* ---------- MOLTIPLICAZIONI ---------- */
+function gM1(){var m=pick([4,4,8]),n=m===4?R(6,25):R(4,15),d=n*2,q=n*4;
+ if(m===4)return P(`${n} × 4`,[q],[
+  `×4 è il doppio del doppio`,
+  `Il doppio di ${n} è ${d}`,
+  `Il doppio di ${d} è ${q}`],`Raddoppia due volte.`);
+ return P(`${n} × 8`,[n*8],[
+  `×8 è il doppio del doppio del doppio`,
+  `Il doppio di ${n} è ${d}`,
+  `Il doppio di ${d} è ${q}`,
+  `Il doppio di ${q} è ${n*8}`],`Raddoppia tre volte.`);}
+function gM2(){var t=pick([0,1,2,2,2]),n;
+ if(t===0){n=R(12,99);return P(`${n} × 10`,[n*10],[`×10: aggiungo uno zero a destra`,`${n} → ${n*10}`],`Aggiungi uno zero.`);}
+ if(t===1){n=R(3,60);return P(`${n} × 100`,[n*100],[`×100: aggiungo due zeri a destra`,`${n} → ${n*100}`],`Aggiungi due zeri.`);}
+ n=R(4,40);return P(`${n} × 5`,[n*5],[
+  `×5 è la metà di ×10`,
+  `Prima ×10: ${n} × 10 = ${n*10}`,
+  `Poi la metà: ${n*10} : 2 = ${n*5}`],`Moltiplica per 10 e poi dividi a metà.`);}
+function gM3(){var z=pick([1,1,2]),base=R(2,9),a=base*(z===1?10:100),b=R(3,9),p=base*b,w=z===1?'lo zero':'gli zeri';
+ var q=a+' × '+b;
+ return P(q,[a*b],[
+  `Tolgo ${w}: ${base} × ${b} = ${p}`,
+  `Rimetto ${w}: ${a*b}`],`Togli gli zeri, moltiplica, poi rimettili.`);}
+function gM4(){if(Math.random()<.5){var n=R(4,15);return P(`${n} × 9`,[n*9],[
+  `×9 è ×10 meno una volta il numero`,
+  `${n} × 10 = ${n*10}`,
+  `${n*10} − ${n} = ${n*9}`],`Fai ×10 e togli una volta il numero.`);}
+ var m=R(12,45);return P(`${m} × 11`,[m*11],[
+  `×11 è ×10 più una volta il numero`,
+  `${m} × 10 = ${m*10}`,
+  `${m*10} + ${m} = ${m*11}`],`Fai ×10 e aggiungi una volta il numero.`);}
+function gM5(){var a,u;do{a=R(12,49);u=a%10;}while(!u);var t=a-u,b=R(3,9);
+ return P(`${a} × ${b}`,[a*b],[
+  `Scompongo ${a} = ${t} + ${u}`,
+  `${t} × ${b} = ${t*b}`,
+  `${u} × ${b} = ${u*b}`,
+  `Riunisco: ${t*b} + ${u*b} = ${a*b}`],`Moltiplica separatamente decine e unità.`);}
+function gM6(){if(Math.random()<.5){var n=4*R(1,12);return P(`${n} × 25`,[n*25],[
+  `×25 è ×100 diviso 4 (25 sta 4 volte in 100)`,
+  `${n} × 100 = ${n*100}`,
+  `${n*100} : 4 = ${n*25}`],`Pensa a 100 diviso 4.`);}
+ var m=R(2,30);return P(`${m} × 50`,[m*50],[
+  `×50 è ×100 diviso 2`,
+  `${m} × 100 = ${m*100}`,
+  `${m*100} : 2 = ${m*50}`],`Pensa a 100 diviso 2.`);}
+
+/* ---------- DIVISIONI ---------- */
+function gD1(){var b=R(2,9),q=R(3,10),a=b*q;
+ return P(`${a} : ${b}`,[q],[
+  `Penso: quante volte sta ${b} in ${a}? Cerco nella tabellina del ${b}`,
+  `${b} × ${q} = ${a}`,
+  `Quindi ${a} : ${b} = ${q}`],`La divisione è la moltiplicazione al contrario.`);}
+function gD2(){if(Math.random()<.35){var q=R(6,49),a=2*q;return P(`${a} : 2`,[q],[
+  `Dividere per 2 vuol dire fare la metà`,
+  `La metà di ${a} è ${q}`],`Fai la metà.`);}
+ var q2=R(3,30),a2=4*q2;return P(`${a2} : 4`,[q2],[
+  `Dividere per 4 vuol dire fare la metà della metà`,
+  `Metà di ${a2} è ${a2/2}`,
+  `Metà di ${a2/2} è ${q2}`],`Fai la metà due volte.`);}
+function gD3(){var t=pick([10,5,5,100]),q,a;
+ if(t===10){q=R(3,60);a=q*10;return P(`${a} : 10`,[q],[`Dividere per 10: tolgo uno zero`,`${a} → ${q}`],`Togli uno zero.`);}
+ if(t===100){q=R(2,30);a=q*100;return P(`${a} : 100`,[q],[`Dividere per 100: tolgo due zeri`,`${a} → ${q}`],`Togli due zeri.`);}
+ q=R(4,40);a=q*5;return P(`${a} : 5`,[q],[
+  `Dividere per 5 è come raddoppiare e poi dividere per 10`,
+  `Il doppio di ${a} è ${a*2}`,
+  `${a*2} : 10 = ${q}`],`Raddoppia, poi togli uno zero.`);}
+function gD4(){var b=R(2,9),q,y;do{q=R(11,29);y=q%10;}while(!y);var qt=q-y,a=b*q,p1=b*qt,p2=b*y;
+ return P(`${a} : ${b}`,[q],[
+  `Spezzo ${a} in due pezzi comodi: ${p1} + ${p2}`,
+  `${p1} : ${b} = ${qt}`,
+  `${p2} : ${b} = ${y}`,
+  `Riunisco: ${qt} + ${y} = ${q}`],`Spezza il numero in pezzi che sai dividere.`);}
+function gD5(){var b=R(3,9),q=R(3,12),r=R(1,b-1),a=b*q+r;
+ return P(`${a} : ${b}`,[q,r],[
+  `Nella tabellina del ${b} cerco il numero più vicino a ${a}, ma più piccolo`,
+  `${b} × ${q} = ${b*q}`,
+  `${a} − ${b*q} = ${r}: è il resto (sempre più piccolo di ${b})`,
+  `Quindi ${a} : ${b} = ${q} con resto ${r}`],`Cerca nella tabellina il numero che si avvicina di più, senza superarlo.`,['quoziente','resto']);}
+
+var TRACKS=[
+ {id:'A',name:'Addizioni',sym:'+',color:'#F59E0B',emoji:'🍊'},
+ {id:'S',name:'Sottrazioni',sym:'−',color:'#14B8A6',emoji:'🐬'},
+ {id:'M',name:'Moltiplicazioni',sym:'×',color:'#8B5CF6',emoji:'🚀'},
+ {id:'D',name:'Divisioni',sym:':',color:'#EC4899',emoji:'🍕'}];
+var LEVELS=[
+ {id:'A1',t:'A',title:'Fai il 10',tip:'Quando un numero è vicino a 10, spezza l\'altro numero: prima completa il 10, poi aggiungi quello che avanza.',gen:gA1},
+ {id:'A2',t:'A',title:'Salta alla decina',tip:'Con i numeri più grandi funziona uguale: arriva alla decina tonda successiva e poi aggiungi il resto.',gen:gA2},
+ {id:'A3',t:'A',title:'Decine con decine',tip:'Scomponi i numeri in decine e unità. Somma insieme le decine, somma insieme le unità, poi riunisci i due risultati.',gen:gA3},
+ {id:'A4',t:'A',title:'Arrotonda e correggi',tip:'Un numero che finisce per 8 o 9 è quasi una decina tonda. Usa la decina tonda e poi togli quello che hai aggiunto in più.',gen:gA4},
+ {id:'A5',t:'A',title:'Le centinaia',tip:'Con i numeri grandi somma prima le centinaia, poi il resto. Un passo alla volta e non ti perdi!',gen:gA5},
+ {id:'S1',t:'S',title:'Passa dal 10',tip:'Per togliere da un numero tra 11 e 18, togli prima quanto serve per arrivare a 10, poi togli quello che avanza.',gen:gS1},
+ {id:'S2',t:'S',title:'Conta in avanti',tip:'Quando i due numeri sono vicini, non togliere! Conta quanto manca per andare dal numero più piccolo al più grande, passando dalla decina.',gen:gS2},
+ {id:'S3',t:'S',title:'Arrotonda e correggi',tip:'Se togli un numero che finisce per 8 o 9, togli la decina tonda vicina e poi rimetti il pezzetto che hai tolto in più.',gen:gS3},
+ {id:'S4',t:'S',title:'Togli a pezzi',tip:'Scomponi il numero da togliere: togli prima le decine, poi le unità.',gen:gS4},
+ {id:'S5',t:'S',title:'Verso il 100',tip:'Per togliere da 100, 200 o 300 conta in avanti: prima fino alla decina, poi fino al cento.',gen:gS5},
+ {id:'M1',t:'M',title:'Raddoppia, raddoppia!',tip:'×2 è il doppio. ×4 è il doppio del doppio. ×8 è il doppio del doppio del doppio. Basta saper raddoppiare!',gen:gM1},
+ {id:'M2',t:'M',title:'10, 100 e 5',tip:'×10 aggiunge uno zero, ×100 ne aggiunge due. ×5 è la metà di ×10.',gen:gM2},
+ {id:'M3',t:'M',title:'Decine intere',tip:'Con i numeri tondi (20, 30, 400…) togli gli zeri, moltiplica, poi rimetti gli zeri.',gen:gM3},
+ {id:'M4',t:'M',title:'Nove e undici',tip:'×9 è ×10 meno una volta il numero. ×11 è ×10 più una volta il numero.',gen:gM4},
+ {id:'M5',t:'M',title:'Scomponi i numeri',tip:'Per moltiplicare un numero a due cifre, scomponilo in decine e unità, moltiplica ogni pezzo e poi somma.',gen:gM5},
+ {id:'M6',t:'M',title:'Venticinque e cinquanta',tip:'×25 è ×100 diviso 4. ×50 è ×100 diviso 2. Il 100 è il tuo amico!',gen:gM6},
+ {id:'D1',t:'D',title:'La tabellina al contrario',tip:'Dividere è il contrario di moltiplicare. Per fare 18 : 3 chiediti: quante volte sta il 3 nel 18? Cerca nella tabellina!',gen:gD1},
+ {id:'D2',t:'D',title:'Dimezza',tip:':2 vuol dire fare la metà. :4 vuol dire fare la metà della metà.',gen:gD2},
+ {id:'D3',t:'D',title:'10, 5 e 100',tip:':10 toglie uno zero, :100 ne toglie due. :5 è come raddoppiare e poi dividere per 10.',gen:gD3},
+ {id:'D4',t:'D',title:'Pezzi comodi',tip:'Quando il numero è grande, spezzalo in pezzi facili da dividere, dividi ogni pezzo e poi somma i risultati.',gen:gD4},
+ {id:'D5',t:'D',title:'Il resto',tip:'Non sempre la divisione è esatta! Cerca nella tabellina il numero più vicino senza superarlo: quello che avanza è il resto.',gen:gD5}
+];
+/*ENDLOGIC*/
+</script>
+
+<script>
+(function(){
+var $=function(s,r){return (r||document).querySelector(s);};
+var app=$('#app');
+var prog={stars:{}};
+try{var raw=localStorage.getItem('matetrucchi_v1');if(raw)prog=JSON.parse(raw);if(!prog.stars)prog.stars={};}catch(e){}
+function save(){try{localStorage.setItem('matetrucchi_v1',JSON.stringify(prog));}catch(e){}}
+function track(id){return TRACKS.filter(function(t){return t.id===id;})[0];}
+function lvl(id){return LEVELS.filter(function(l){return l.id===id;})[0];}
+function lvOf(t){return LEVELS.filter(function(l){return l.t===t;});}
+function st(id){return prog.stars[id]||0;}
+function starStr(n){return '★★★'.slice(0,n)+'☆☆☆'.slice(0,3-n);}
+function unlocked(l){var ls=lvOf(l.t),i=ls.indexOf(l);return i===0||st(ls[i-1].id)>0;}
+function setColor(c){app.style.setProperty('--c',c);document.body.style.setProperty('--c',c);}
+function toast(msg){var t=$('#toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none';},2600);}
+function modal(html){closeModal();var m=document.createElement('div');m.className='modal';m.id='modal';m.innerHTML='<div class="sheet">'+html+'</div>';document.body.appendChild(m);return m;}
+function closeModal(){var m=$('#modal');if(m)m.parentNode.removeChild(m);}
+window.onresize=null;
+
+/* ---------- HOME ---------- */
+function home(){
+ setColor('#2b2d42');
+ var cards=TRACKS.map(function(t){var ls=lvOf(t.id);var done=ls.filter(function(l){return st(l.id)>0;}).length;
+  return '<button class="tcard" style="--c:'+t.color+'" data-t="'+t.id+'"><div class="em">'+t.emoji+'</div><div class="sym">'+t.sym+'</div><h2>'+t.name+'</h2><p>'+done+' / '+ls.length+' trucchi imparati</p></button>';}).join('');
+ var any=LEVELS.some(function(l){return st(l.id)>0;});
+ app.innerHTML='<div class="scroll home"><h1>Mate Trucchi 🧠</h1><p class="sub">Impara i trucchi dei campioni del calcolo!</p><div class="tgrid">'+cards+'</div>'+
+  '<button class="mix'+(any?'':' off')+'" id="mix">🎲 Sfida mista'+(any?'':' (si sblocca dopo il primo trucco)')+'</button>'+
+  '<button class="info" id="info">ℹ️ Come usarla senza internet</button></div>';
+ Array.prototype.forEach.call(app.querySelectorAll('.tcard'),function(b){b.onclick=function(){trackScreen(b.getAttribute('data-t'));};});
+ $('#mix').onclick=function(){if(!any){toast('Prima impara almeno un trucco! 😉');return;}
+  var pool=LEVELS.filter(function(l){return st(l.id)>0;});startQuiz(pool,true);};
+ $('#info').onclick=function(){var m=modal('<h2>Senza internet 📴</h2><p style="font-size:20px;line-height:1.5">Apri l\'app con Safari <b>una volta con internet</b>, poi tocca il pulsante Condividi e scegli <b>«Aggiungi alla schermata Home»</b>.<br><br>Da quel momento l\'app si apre dall\'icona e funziona anche senza connessione. I progressi restano salvati sull\'iPad.</p><div class="row"><button class="big" id="ok">Ho capito</button></div>');$('#ok',m).onclick=closeModal;};
+}
+
+/* ---------- LISTA LIVELLI ---------- */
+function trackScreen(tid){
+ var t=track(tid);setColor(t.color);
+ var rows=lvOf(tid).map(function(l,i){var u=unlocked(l);
+  return '<button class="lv'+(u?'':' lock')+'" data-id="'+l.id+'"><div class="n">'+(u?(i+1):'🔒')+'</div><div class="t">'+l.title+'<small>'+(u?'Tocca per imparare il trucco':'Completa il livello precedente')+'</small></div><div class="s">'+(u?starStr(st(l.id)):'')+'</div></button>';}).join('');
+ app.innerHTML='<div class="scroll"><div class="bar"><button class="back" id="bk">‹ Indietro</button><h1>'+t.emoji+' '+t.name+'</h1></div>'+rows+'</div>';
+ $('#bk').onclick=home;
+ Array.prototype.forEach.call(app.querySelectorAll('.lv'),function(b){b.onclick=function(){var l=lvl(b.getAttribute('data-id'));if(!unlocked(l)){toast('Prima completa il livello precedente 🔓');return;}lesson(l);};});
+}
+
+/* ---------- LEZIONE ---------- */
+function lesson(l){
+ var t=track(l.t);setColor(t.color);var p=l.gen();
+ app.innerHTML='<div class="scroll"><div class="bar"><button class="back" id="bk">‹ Indietro</button></div><div class="card"><h2>💡 Il trucco: '+l.title+'</h2><p class="tip">'+l.tip+'</p>'+
+  '<div class="ex"><div class="q">'+p.text+' = '+p.ans.join(' con resto ')+'</div><ol>'+p.steps.map(function(s){return '<li>'+s+'</li>';}).join('')+'</ol></div>'+
+  '<button class="big" id="go">Proviamo! ➜</button></div></div>';
+ $('#bk').onclick=function(){trackScreen(l.t);};
+ $('#go').onclick=function(){startQuiz([l],false);};
+}
+
+/* ---------- QUIZ ---------- */
+var Q=null;
+function startQuiz(pool,mix){Q={pool:pool,mix:mix,n:mix?8:6,i:0,ok:0,first:0,seen:{},cur:null,att:0,hint:false,vals:['',''],sel:0};nextQ();}
+function nextQ(){
+ if(Q.i>=Q.n){result();return;}
+ var lv=pick(Q.pool),p,k=0;do{p=lv.gen();k++;}while(Q.seen[p.text]&&k<25);Q.seen[p.text]=1;
+ Q.cur={lv:lv,p:p};Q.att=0;Q.hint=false;Q.vals=['',''];Q.sel=0;renderQuiz();
+}
+function ansHTML(){
+ var p=Q.cur.p,out='';
+ if(!p.labels){return '<span class="box sel" data-i="0">'+Q.vals[0]+'</span>';}
+ for(var i=0;i<2;i++){out+='<span class="box'+(Q.sel===i?' sel':'')+'" data-i="'+i+'">'+Q.vals[i]+'</span><small>'+p.labels[i]+'</small>';}
+ return out;
+}
+function updAns(){var a=$('#ans');a.innerHTML=ansHTML();bindBoxes();}
+function bindBoxes(){Array.prototype.forEach.call(app.querySelectorAll('#ans .box'),function(b){b.onclick=function(){Q.sel=+b.getAttribute('data-i');updAns();};});}
+function renderQuiz(){
+ var c=Q.cur,t=track(c.lv.t),p=c.p;setColor(t.color);
+ var dots='';for(var i=0;i<Q.n;i++)dots+='<i class="'+(i<Q.i?'d':'')+(i===Q.i?' c':'')+'"></i>';
+ var keys='';for(var n=1;n<=9;n++)keys+='<button class="k" data-k="'+n+'">'+n+'</button>';
+ keys+='<button class="k del" data-k="del">⌫</button><button class="k" data-k="0">0</button><button class="k" data-k="clr" style="font-size:24px">Cancella</button>';
+ app.innerHTML='<div id="quiz">'+
+  '<div class="qbar"><button class="back" id="bk">✕ Esci</button><div class="ttl">'+t.emoji+' '+(Q.mix?'Sfida mista':c.lv.title)+'</div><div class="dots">'+dots+'</div></div>'+
+  '<div class="main"><div class="left">'+
+   '<div class="prob"><span>'+p.text+' =</span><span id="ans" style="display:inline-flex;gap:10px;align-items:center">'+ansHTML()+'</span></div>'+
+   '<div class="paperwrap"><div id="paper"><canvas id="cv"></canvas></div></div>'+
+   '<div class="tools"><button class="tool on" data-c="#1f2937"><span class="dot" style="background:#1f2937"></span></button>'+
+    '<button class="tool" data-c="#2563eb"><span class="dot" style="background:#2563eb"></span></button>'+
+    '<button class="tool" data-c="#dc2626"><span class="dot" style="background:#dc2626"></span></button>'+
+    '<button class="tool" id="er">🧽</button><div class="sp"></div><button class="tool" id="un">↩️</button><button class="tool" id="tr">🗑️</button></div>'+
+  '</div>'+
+  '<div class="right"><button class="hintbtn" id="hint">💡 Suggerimento</button><div id="hb"></div><div class="keys">'+keys+'</div><button class="go" id="chk">Controlla ✓</button></div>'+
+  '</div></div>';
+ $('#bk').onclick=function(){modal('<h2>Vuoi uscire?</h2><p style="font-size:20px">Il livello si interrompe.</p><div class="row"><button class="big sec" id="no" style="color:#2b2d42;background:#fff">Resta</button><button class="big" id="yes">Esci</button></div>');
+  $('#no').onclick=closeModal;$('#yes').onclick=function(){closeModal();if(Q.mix)home();else trackScreen(Q.cur.lv.t);};};
+ Array.prototype.forEach.call(app.querySelectorAll('.k'),function(b){b.onclick=function(){key(b.getAttribute('data-k'));};});
+ $('#chk').onclick=check;
+ $('#hint').onclick=function(){Q.hint=true;$('#hb').innerHTML='<div class="hintbox">💡 '+p.hint+'</div>';};
+ bindBoxes();initCanvas();
+}
+function key(k){var i=Q.sel;
+ if(k==='del')Q.vals[i]=Q.vals[i].slice(0,-1);
+ else if(k==='clr')Q.vals[i]='';
+ else if(Q.vals[i].length<5)Q.vals[i]+=k;
+ updAns();}
+function check(){
+ var p=Q.cur.p,need=p.ans.length,i;
+ for(i=0;i<need;i++){if(Q.vals[i]===''){var a=$('#ans');a.classList.remove('shake');void a.offsetWidth;a.classList.add('shake');
+   toast(need>1?'Scrivi sia il quoziente sia il resto ✏️':'Scrivi la risposta ✏️');if(need>1){Q.sel=Q.vals[0]===''?0:1;updAns();}return;}}
+ var good=p.ans.every(function(v,j){return Number(Q.vals[j])===v;});
+ if(good){Q.ok++;if(Q.att===0&&!Q.hint)Q.first++;feedback(true);}
+ else{Q.att++;if(Q.att>=2){feedback(false);}
+  else{toast('Quasi! Controlla i tuoi passaggi e riprova 🔍');Q.vals=['',''];Q.sel=0;updAns();
+   $('#hb').innerHTML='<div class="hintbox">💡 '+p.hint+'</div>';}}
+}
+function feedback(good){
+ var c=Q.cur,p=c.p,t=track(c.lv.t);
+ var head=good?pick(['Bravo! 🎉','Esatto! ⭐','Grande! 🚀','Perfetto! 🌟']):'Non preoccuparti, impariamo insieme! 💪';
+ var res=p.ans.length>1?p.text+' = '+p.ans[0]+' con resto '+p.ans[1]:p.text+' = '+p.ans[0];
+ var lis=p.steps.map(function(s,i){return '<li style="animation-delay:'+(0.25+i*0.45)+'s">'+s+'</li>';}).join('');
+ var m=modal('<h2>'+head+'</h2><div class="res">'+res+'</div><h3>'+(good?'Ecco il trucco per farlo più in fretta:':'Ecco il trucco per farlo facile:')+'</h3><ol class="steps">'+lis+'</ol><div class="row"><button class="big" id="nx">'+(Q.i+1>=Q.n?'Vedi il risultato ➜':'Avanti ➜')+'</button></div>');
+ $('#nx',m).onclick=function(){closeModal();Q.i++;nextQ();};
+}
+function result(){
+ var n=Q.n,ok=Q.ok,stars=0;
+ if(!Q.mix){if(ok===n&&Q.first===n)stars=3;else if(ok===n)stars=2;else if(ok>=n-1)stars=1;}
+ var lv=Q.pool[0],passed=!Q.mix&&stars>0,nxt=null;
+ if(!Q.mix){if(stars>st(lv.id)){prog.stars[lv.id]=stars;save();}
+  var ls=lvOf(lv.t),i=ls.indexOf(lv);nxt=ls[i+1]||null;}
+ var msg=Q.mix?(ok+' risposte giuste su '+n+'!'):(passed?(stars===3?'Fantastico, tutto perfetto!':'Trucco imparato! Bravissimo!'):'Ci sei quasi! Riprova: con un po\' di allenamento ce la fai.');
+ var starsHtml=Q.mix?'<div class="stars">'+(ok>=n-1?'🏆':ok>=n/2?'👍':'💪')+'</div>':'<div class="stars">'+starStr(stars)+'</div>';
+ var btns=Q.mix?'<button class="big sec" id="again">Ancora!</button><button class="big" id="hm">Menu</button>':
+  '<button class="big sec" id="again">Ancora</button>'+(passed&&nxt?'<button class="big" id="next">Prossimo trucco ➜</button>':'')+'<button class="big" id="hm" style="background:#2b2d42">Menu</button>';
+ var m=modal('<div class="center"><h2>'+(passed||Q.mix?'Livello finito!':'Riproviamo!')+'</h2>'+starsHtml+'<div class="res">'+msg+'</div><p style="font-size:20px;margin:0">Risposte giuste: '+ok+' su '+n+'</p><div class="row">'+btns+'</div></div>');
+ $('#again',m).onclick=function(){closeModal();startQuiz(Q.pool,Q.mix);};
+ $('#hm',m).onclick=function(){closeModal();if(Q.mix)home();else trackScreen(lv.t);};
+ if($('#next',m))$('#next',m).onclick=function(){closeModal();lesson(nxt);};
+}
+
+/* ---------- QUADERNO (canvas) ---------- */
+var cv,ctx,strokes=[],curS=null,tool={color:'#1f2937',erase:false},penSeen=false,DPR=1,CW=1,CH=1;
+function initCanvas(){
+ cv=$('#cv');var wrap=$('#paper');ctx=cv.getContext('2d');strokes=[];curS=null;tool={color:'#1f2937',erase:false};
+ function fit(){var r=wrap.getBoundingClientRect();DPR=window.devicePixelRatio||1;CW=r.width;CH=r.height;
+  cv.width=Math.round(CW*DPR);cv.height=Math.round(CH*DPR);cv.style.width=CW+'px';cv.style.height=CH+'px';redraw();}
+ fit();window.onresize=fit;
+ function pt(e){var r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,(e.pointerType==='pen'&&e.pressure>0)?e.pressure:0.5];}
+ cv.addEventListener('pointerdown',function(e){
+  if(e.pointerType==='pen')penSeen=true;
+  if(e.pointerType==='touch'&&penSeen)return;   // palm rejection con Apple Pencil
+  e.preventDefault();try{cv.setPointerCapture(e.pointerId);}catch(x){}
+  var p=pt(e);curS={c:tool.color,w:tool.erase?28:4,e:tool.erase,pts:[p],id:e.pointerId};strokes.push(curS);seg(curS,p,p);});
+ cv.addEventListener('pointermove',function(e){
+  if(!curS||e.pointerId!==curS.id)return;e.preventDefault();
+  var evs=(e.getCoalescedEvents&&e.getCoalescedEvents().length)?e.getCoalescedEvents():[e];
+  for(var i=0;i<evs.length;i++){var p=pt(evs[i]),last=curS.pts[curS.pts.length-1];seg(curS,last,p);curS.pts.push(p);}});
+ function end(e){if(curS&&e.pointerId===curS.id)curS=null;}
+ cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+ cv.addEventListener('contextmenu',function(e){e.preventDefault();});
+ Array.prototype.forEach.call(app.querySelectorAll('.tool[data-c]'),function(b){b.onclick=function(){
+  tool.color=b.getAttribute('data-c');tool.erase=false;sel(b);};});
+ $('#er').onclick=function(){tool.erase=true;sel($('#er'));};
+ $('#un').onclick=function(){strokes.pop();redraw();};
+ $('#tr').onclick=function(){strokes=[];redraw();};
+ function sel(b){Array.prototype.forEach.call(app.querySelectorAll('.tool'),function(x){x.classList.remove('on');});b.classList.add('on');}
+}
+function seg(s,a,b){
+ ctx.setTransform(DPR,0,0,DPR,0,0);
+ ctx.globalCompositeOperation=s.e?'destination-out':'source-over';
+ ctx.strokeStyle=s.c;ctx.lineCap='round';ctx.lineJoin='round';
+ ctx.lineWidth=s.e?s.w:s.w*(0.6+0.8*b[2]);
+ ctx.beginPath();ctx.moveTo(a[0]*CW,a[1]*CH);ctx.lineTo(b[0]*CW,b[1]*CH);ctx.stroke();
+}
+function redraw(){
+ ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation='source-over';ctx.clearRect(0,0,cv.width,cv.height);
+ strokes.forEach(function(s){if(s.pts.length===1){seg(s,s.pts[0],s.pts[0]);return;}for(var i=1;i<s.pts.length;i++)seg(s,s.pts[i-1],s.pts[i]);});
+}
+
+/* ---------- OFFLINE ---------- */
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+ window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}
+document.addEventListener('gesturestart',function(e){e.preventDefault();});
+home();
+})();
+</script>
+</body>
+</html>

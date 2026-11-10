@@ -1,0 +1,16 @@
+{
+  "name": "Mate Trucchi",
+  "short_name": "Mate Trucchi",
+  "description": "Giochi di matematica con i trucchi per calcolare in fretta",
+  "lang": "it",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FFF7E6",
+  "theme_color": "#FFF7E6",
+  "icons": [
+    {"src": "icon-180.png", "sizes": "180x180", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}
